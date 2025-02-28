@@ -1,0 +1,30 @@
+import re
+
+# Открываем файл
+with open("row.txt", "r", encoding="utf-8") as file:
+    text = file.read()
+
+# 1. Найти названия товаров
+items = re.findall(r'\d+\.\n(.*?)\n\d+,\d+', text)
+
+# 2. Извлечь количество, цену за единицу и итоговую стоимость
+prices = re.findall(r'(\d+,\d+)\s+x\s+([\d\s]+,\d+)\n([\d\s]+,\d+)', text)
+prices = [(q.replace(',', '.'), p.replace(' ', '').replace(',', '.'), t.replace(' ', '').replace(',', '.')) for q, p, t in prices]
+
+# 3. Найти итоговую сумму чека
+total = re.search(r'ИТОГО:\s*([\d\s]+,\d+)', text)
+total_amount = total.group(1).replace(' ', '') if total else None
+
+# 4. Найти дату и время покупки
+datetime = re.search(r'Время:\s*(\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}:\d{2})', text)
+purchase_datetime = datetime.group(1) if datetime else None
+
+# 5. Найти рецептурные товары ([RX])
+rx_items = re.findall(r'\[RX\]-([^\n]+)', text)
+
+# Вывод результатов
+print("Товары:", items)
+print("Цены и количество:", prices)
+print("Итоговая сумма:", total_amount)
+print("Дата и время покупки:", purchase_datetime)
+print("Рецептурные товары:", rx_items)
