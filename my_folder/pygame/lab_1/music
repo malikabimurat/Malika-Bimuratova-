@@ -1,0 +1,35 @@
+import pygame
+pygame.init()
+
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Music Player 🎵")
+
+# Плейлист
+_songs = ['song_1.mp3', 'song_2.mp3', 'song_3.mp3', 'song_4.mp3', 'song_5.mp3']
+song_index = 0
+
+# Загружаем первый трек
+pygame.mixer.music.load(_songs[song_index])
+
+# Звук-эффект
+sound = pygame.mixer.Sound("beep.wav")
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_g:  # G = Go
+                pygame.mixer.music.play()
+            elif event.key == pygame.K_s:  # S = Stop
+                pygame.mixer.music.stop()
+            elif event.key == pygame.K_n:  # N = Next
+                song_index = (song_index + 1) % len(_songs)
+                pygame.mixer.music.load(_songs[song_index])
+                pygame.mixer.music.play()
+            elif event.key == pygame.K_r:  # R = Previous
+                song_index = (song_index - 1) % len(_songs)
+                pygame.mixer.music.load(_songs[song_index])
+                pygame.mixer.music.play() 
